@@ -298,6 +298,138 @@ export const cssSource = String.raw`
   outline-offset: 2px;
 }
 
+/* ── Position rules ─────────────────────────────────────────────────── */
+
+:where(.bba-banner[data-bba-position="top"][data-bba-sticky="true"]) {
+  position: sticky;
+  top: 0;
+  z-index: var(--bba-z-sticky);
+  border-radius: 0;
+}
+
+:where(.bba-banner[data-bba-position="bottom"][data-bba-sticky="true"]) {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--bba-z-sticky);
+  border-radius: 0;
+  padding-bottom: max(var(--bba-space-5), env(safe-area-inset-bottom));
+}
+
+:where(.bba-banner[data-bba-position="corner"]) {
+  position: fixed;
+  z-index: var(--bba-z-corner);
+  box-shadow: var(--bba-shadow-lg);
+  border-radius: var(--bba-radius-xl);
+  max-width: calc(100vw - 40px);
+}
+
+:where(.bba-banner[data-bba-position="inline"]),
+:where(.bba-banner[data-bba-position="custom"]) {
+  /* No positioning — host controls placement. */
+}
+
+/* ── Size presets ───────────────────────────────────────────────────── */
+
+:where(.bba-banner[data-bba-size="sm"]) {
+  min-height: 56px;
+  padding: var(--bba-space-3) var(--bba-space-5);
+  gap: var(--bba-space-4);
+}
+
+:where(.bba-banner[data-bba-size="md"]) {
+  min-height: 72px;
+}
+
+:where(.bba-banner[data-bba-size="lg"]) {
+  min-height: 96px;
+  padding: var(--bba-space-6) var(--bba-space-8);
+}
+
+:where(.bba-banner[data-bba-size="leaderboard"]) {
+  width: 930px;
+  max-width: 100%;
+  height: 180px;
+  aspect-ratio: 930 / 180;
+}
+
+:where(.bba-banner[data-bba-size="social"]) {
+  width: 1200px;
+  max-width: 100%;
+  aspect-ratio: 1200 / 628;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--bba-space-8);
+}
+
+:where(.bba-banner[data-bba-size="halfpage"]) {
+  width: 300px;
+  max-width: 100%;
+  height: 600px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: var(--bba-space-6);
+}
+
+:where(.bba-banner[data-bba-size="banner"]) {
+  width: 468px;
+  max-width: 100%;
+  min-height: 60px;
+  padding: var(--bba-space-2) var(--bba-space-3);
+  gap: var(--bba-space-3);
+  font-size: var(--bba-fs-sm);
+}
+
+:where(.bba-banner[data-bba-size="banner"] .bba-banner__title) {
+  font-size: var(--bba-fs-sm);
+}
+
+:where(.bba-banner[data-bba-size="fullwidth-strip"]) {
+  width: 100%;
+  max-width: none;
+  min-height: 72px;
+  border-radius: 0;
+}
+
+/* ── Text alignment ─────────────────────────────────────────────────── */
+
+:where(.bba-banner[data-bba-align="center"] .bba-banner__body) {
+  text-align: center;
+  align-items: center;
+}
+
+:where(.bba-banner[data-bba-align="end"] .bba-banner__body) {
+  text-align: end;
+  align-items: flex-end;
+}
+
+/* ── Media layout variants (BrandedBanner uses these in Phase 5) ────── */
+
+:where(.bba-banner[data-bba-media-pos="left"]) {
+  flex-direction: row;
+}
+
+:where(.bba-banner[data-bba-media-pos="right"]) {
+  flex-direction: row-reverse;
+}
+
+:where(.bba-banner[data-bba-media-pos="background"]) {
+  position: relative;
+}
+
+:where(.bba-banner[data-bba-media-pos="background"] .bba-banner__media) {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+:where(.bba-banner[data-bba-media-pos="background"] .bba-banner__body),
+:where(.bba-banner[data-bba-media-pos="background"] .bba-banner__cta) {
+  position: relative;
+  z-index: 1;
+}
+
 /* Stack on small screens (mobile single-column). */
 @media (max-width: 640px) {
   :where(.bba-banner) {
@@ -309,6 +441,12 @@ export const cssSource = String.raw`
   }
   :where(.bba-banner__cta) {
     flex: 1 1 100%;
+  }
+  :where(.bba-banner[data-bba-position="corner"]) {
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px);
   }
 }
 

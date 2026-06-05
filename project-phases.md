@@ -68,16 +68,16 @@ Goal: the composable shell every banner is built on, plus the cross-cutting beha
 Goal: "full layout control via props" — position, sizing (incl. named ad presets), alignment, sticky/corner.
 
 **Tasks**
-- [ ] Implement `position`: `top`, `bottom`, `inline`, `corner`, `custom`. `top`/`bottom` support `sticky`. `corner` floats (toast-like) with configurable corner + offset.
-- [ ] Implement z-index layering tokens so sticky/corner ads sit above content predictably.
-- [ ] Implement `width`: `full`, percentage (e.g. `80%`), explicit px/CSS values.
-- [ ] Implement `size` presets (`sm`/`md`/`lg`) mapping to height/padding/typography.
-- [ ] Implement **named ad-size presets** matching Image 2: `leaderboard` (≈728/930×~90/180), `social` (1200×628), `halfpage` (300×600), `banner` (468×60), plus `fullwidth-strip`. Document exact dimensions.
-- [ ] Implement alignment/ordering props (media left/right/background; text alignment; CTA placement).
-- [ ] Ensure responsive behavior: graceful down-scaling on small screens; presets adapt or scroll sensibly.
-- [ ] Tests/visual checks for each position and preset.
+- [x] Implement `position`: `top`, `bottom`, `inline`, `corner`, `custom`. `top`/`bottom` support `sticky`. `corner` floats (toast-like) with configurable corner + offset.
+- [x] Implement z-index layering tokens so sticky/corner ads sit above content predictably.
+- [x] Implement `width`: `full`, percentage (e.g. `80%`), explicit px/CSS values.
+- [x] Implement `size` presets (`sm`/`md`/`lg`) mapping to height/padding/typography.
+- [x] Implement **named ad-size presets** matching Image 2: `leaderboard` (≈728/930×~90/180), `social` (1200×628), `halfpage` (300×600), `banner` (468×60), plus `fullwidth-strip`. Document exact dimensions.
+- [x] Implement alignment/ordering props (media left/right/background; text alignment; CTA placement).
+- [x] Ensure responsive behavior: graceful down-scaling on small screens; presets adapt or scroll sensibly.
+- [x] Tests/visual checks for each position and preset.
 
-**Exit criteria:** A developer can place a sticky bottom strip, a floating corner ad, an inline ad, and a fixed-size 300×600 ad purely via props, and each looks correct and responsive.
+**Exit criteria:** A developer can place a sticky bottom strip, a floating corner ad, an inline ad, and a fixed-size 300×600 ad purely via props, and each looks correct and responsive. ✅ (22 layout tests passing)
 
 ---
 

@@ -17,11 +17,14 @@ import type {
   OnClick,
   OnClose,
   OnView,
+  Position,
+  SizePreset,
   StorageAdapter,
 } from "../types/ad";
 import type { ThemeMode } from "../types/theme";
 import { cn } from "../utils/cn";
 import { composeRefs } from "../utils/compose-refs";
+import { computeLayout, type Corner } from "../utils/layout";
 import { mergeConfigAndProps } from "../utils/merge-config";
 import { BannerContext, useBannerContext } from "./banner-context";
 
@@ -46,6 +49,22 @@ export interface CustomBannerProps {
   onClose?: OnClose;
   /** Optional serializable config object. Explicit props always override these. */
   config?: BannerConfig;
+  /** Where to place the banner. Default `"inline"`. */
+  position?: Position;
+  /** When `position` is `"top"` or `"bottom"`, make the banner sticky to the edge. */
+  sticky?: boolean;
+  /** When `position === "corner"`, which corner to dock to. Default `"bottom-right"`. */
+  corner?: Corner;
+  /** Edge offset (px) for corner/custom positioning. Default `20`. */
+  offset?: number;
+  /** Any CSS width value: `"full"` (= 100%), `"80%"`, `"600px"`. */
+  width?: string;
+  /** Named size preset or `sm`/`md`/`lg`. See `design-style-guide.md` §8. */
+  size?: SizePreset;
+  /** Text alignment within the body slot. Default `"start"`. */
+  align?: "start" | "center" | "end";
+  /** Where the media slot sits relative to the body. Default `"left"`. */
+  mediaPosition?: "left" | "right" | "background";
   /** Extra class names appended after defaults (consumer wins cascade). */
   className?: string;
   style?: CSSProperties;
@@ -68,6 +87,14 @@ function CustomBannerInner(
     onView,
     onClick,
     onClose,
+    position: positionProp,
+    sticky: stickyProp,
+    corner: cornerProp,
+    offset: offsetProp,
+    width: widthProp,
+    size: sizeProp,
+    align,
+    mediaPosition,
     className,
     style,
     children,
@@ -78,6 +105,12 @@ function CustomBannerInner(
     theme: themeProp,
     dismissible: dismissibleProp,
     ariaLabel: ariaLabelProp,
+    position: positionProp,
+    sticky: stickyProp,
+    corner: cornerProp,
+    offset: offsetProp,
+    width: widthProp,
+    size: sizeProp,
   });
 
   const fallbackId = useId();
@@ -119,6 +152,14 @@ function CustomBannerInner(
 
   if (dismissed) return null;
 
+  const layout = computeLayout({
+    position: merged.position,
+    sticky: merged.sticky,
+    corner: merged.corner,
+    offset: merged.offset,
+    width: merged.width,
+  });
+
   return (
     <BannerContext.Provider value={ctxValue}>
       <div
@@ -126,9 +167,13 @@ function CustomBannerInner(
         className={cn("bba-root", "bba-banner", className)}
         data-bba-theme={themeMode}
         data-bba-id={id}
+        data-bba-size={merged.size}
+        data-bba-align={align}
+        data-bba-media-pos={mediaPosition}
         role="complementary"
         aria-label={ariaLabel}
-        style={style}
+        style={{ ...layout.style, ...style }}
+        {...layout.dataAttrs}
       >
         {children}
       </div>
