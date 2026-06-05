@@ -1,0 +1,23 @@
+{
+  "name": "beautiful-banner-ads-playground",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Live demo of beautiful-banner-ads in light/dark/system themes.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}
