@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AdSlot } from "../components/AdSlot";
 import { BannerAd } from "../components/BannerAd";
+import type { BannerConfig } from "../types/ad";
 
 const ads = [
   { id: "1", title: "Ad One", cta: { label: "Go 1", href: "/1" } },
@@ -150,7 +151,7 @@ describe("AdSlot", () => {
   });
 
   it("width / layout / size / theme cascade into children-as-function config", () => {
-    let seen: Record<string, unknown> = {};
+    let seen: Partial<BannerConfig> = {};
     render(
       <AdSlot
         ads={ads}
@@ -176,7 +177,7 @@ describe("AdSlot", () => {
       { ...ads[0]!, width: "300px", layout: "image-left" as const, size: "md" as const, theme: "light" as const },
       ads[1]!,
     ];
-    let seen: Record<string, unknown> = {};
+    let seen: Partial<BannerConfig> = {};
     render(
       <AdSlot
         ads={overridden}
