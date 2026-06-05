@@ -1,9 +1,9 @@
 import { forwardRef, type CSSProperties, type ForwardedRef } from "react";
 import { CustomBanner, type CustomBannerProps } from "../primitives/CustomBanner";
-import type { BrandColors, CTA } from "../types/ad";
+import type { BrandColors, CTA, ImageInput } from "../types/ad";
 import { cn } from "../utils/cn";
 
-type ImageInput = string | { src: string; alt?: string };
+export type { ImageInput } from "../types/ad";
 
 export interface BrandedBannerProps
   extends Omit<CustomBannerProps, "children" | "componentType" | "mediaPosition"> {
@@ -12,12 +12,25 @@ export interface BrandedBannerProps
   eyebrow?: string;
   finePrint?: string;
   cta?: CTA;
-  /** Transparent product image. Pass a URL or `{ src, alt }`. */
+  /**
+   * Transparent product image. Pass a URL or
+   * `{ src, alt?, width?, height?, fit?, position? }`. Supplying both
+   * `width` and `height` reserves aspect-ratio space and prevents CLS.
+   */
   image?: ImageInput;
   /** Brand palette — primary/accent/bg/text. Each is optional. */
   brandColors?: BrandColors;
   /** Where the image sits relative to the body. Default `"image-right"`. */
   layout?: "image-left" | "image-right" | "image-bg";
+}
+
+interface NormalizedImage {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  fit?: "contain" | "cover" | "scale-down" | "fill" | "none";
+  position?: "center" | "top" | "bottom" | "left" | "right";
 }
 
 const LAYOUT_TO_MEDIA_POS = {
@@ -26,10 +39,17 @@ const LAYOUT_TO_MEDIA_POS = {
   "image-bg": "background",
 } as const;
 
-function normalizeImage(img: ImageInput | undefined): { src: string; alt: string } | null {
+function normalizeImage(img: ImageInput | undefined): NormalizedImage | null {
   if (!img) return null;
   if (typeof img === "string") return { src: img, alt: "" };
-  return { src: img.src, alt: img.alt ?? "" };
+  return {
+    src: img.src,
+    alt: img.alt ?? "",
+    width: img.width,
+    height: img.height,
+    fit: img.fit,
+    position: img.position,
+  };
 }
 
 function deriveBrandVars(b: BrandColors | undefined): CSSProperties | undefined {
@@ -84,8 +104,12 @@ function BrandedBannerInner(
   const mergedEyebrow = eyebrow ?? config?.eyebrow;
   const mergedCta = cta ?? config?.cta;
   const mergedFinePrint = finePrint ?? config?.finePrint;
-  const configImage = config?.media?.src ? { src: config.media.src, alt: config.media.alt } : undefined;
-  const mergedImage = normalizeImage(image ?? configImage);
+  // Resolution order: explicit `image` prop > `config.image` > `config.media` (last-resort
+  // fallback so an existing MediaBanner-style config still renders something).
+  const configImageFromMedia = config?.media?.src
+    ? { src: config.media.src, alt: config.media.alt }
+    : undefined;
+  const mergedImage = normalizeImage(image ?? config?.image ?? configImageFromMedia);
   const mergedBrand = brandColors ?? config?.brandColors;
   const mergedLayout = layout ?? config?.layout ?? "image-right";
   const mergedSize = size ?? config?.size ?? "leaderboard";
@@ -113,8 +137,18 @@ function BrandedBannerInner(
           <img
             src={mergedImage.src}
             alt={mergedImage.alt}
+            width={mergedImage.width}
+            height={mergedImage.height}
             className="bba-banner-branded__image"
             loading="lazy"
+            style={
+              mergedImage.fit || mergedImage.position
+                ? {
+                    ...(mergedImage.fit ? { objectFit: mergedImage.fit } : null),
+                    ...(mergedImage.position ? { objectPosition: mergedImage.position } : null),
+                  }
+                : undefined
+            }
           />
         </CustomBanner.Media>
       )}

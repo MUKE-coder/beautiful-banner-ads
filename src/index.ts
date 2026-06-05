@@ -43,6 +43,7 @@ export {
   type AdSlotProps,
   type BannerAdProps,
   type BrandedBannerProps,
+  type CycleCompleteMeta,
   type MediaBannerProps,
   type RotateOptions,
 } from "./components";
@@ -64,6 +65,7 @@ export type {
   BannerConfig,
   BrandColors,
   CTA,
+  ImageInput,
   MediaSpec,
   OnClick,
   OnClose,

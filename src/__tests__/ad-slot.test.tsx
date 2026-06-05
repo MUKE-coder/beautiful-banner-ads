@@ -148,4 +148,125 @@ describe("AdSlot", () => {
     expect(seen.dismissible).toBe(true);
     expect(seen.id).toBe("1");
   });
+
+  it("width / layout / size / theme cascade into children-as-function config", () => {
+    let seen: Record<string, unknown> = {};
+    render(
+      <AdSlot
+        ads={ads}
+        width="460px"
+        layout="image-right"
+        size="leaderboard"
+        theme="dark"
+      >
+        {(config) => {
+          seen = config;
+          return <div>{config.title}</div>;
+        }}
+      </AdSlot>,
+    );
+    expect(seen.width).toBe("460px");
+    expect(seen.layout).toBe("image-right");
+    expect(seen.size).toBe("leaderboard");
+    expect(seen.theme).toBe("dark");
+  });
+
+  it("per-ad config wins over the slot-level cascade for width / layout / size / theme", () => {
+    const overridden = [
+      { ...ads[0]!, width: "300px", layout: "image-left" as const, size: "md" as const, theme: "light" as const },
+      ads[1]!,
+    ];
+    let seen: Record<string, unknown> = {};
+    render(
+      <AdSlot
+        ads={overridden}
+        width="460px"
+        layout="image-right"
+        size="leaderboard"
+        theme="dark"
+      >
+        {(config) => {
+          seen = config;
+          return <div>{config.title}</div>;
+        }}
+      </AdSlot>,
+    );
+    expect(seen.width).toBe("300px");
+    expect(seen.layout).toBe("image-left");
+    expect(seen.size).toBe("md");
+    expect(seen.theme).toBe("light");
+  });
+
+  it("onCycleComplete fires once per full pass through ads", () => {
+    const onCycleComplete = vi.fn();
+    render(
+      <AdSlot
+        ads={ads}
+        rotate={{ interval: 1000 }}
+        onCycleComplete={onCycleComplete}
+      />,
+    );
+    // Cycle through all 3 ads — wraps from 2 → 0 on the 3rd tick.
+    act(() => {
+      vi.advanceTimersByTime(1000); // 0 → 1
+    });
+    expect(onCycleComplete).not.toHaveBeenCalled();
+    act(() => {
+      vi.advanceTimersByTime(1000); // 1 → 2
+    });
+    expect(onCycleComplete).not.toHaveBeenCalled();
+    act(() => {
+      vi.advanceTimersByTime(1000); // 2 → 0 (wrap — cycle complete)
+    });
+    expect(onCycleComplete).toHaveBeenCalledTimes(1);
+    const meta = onCycleComplete.mock.calls[0]![0];
+    expect(meta.cycleCount).toBe(1);
+    expect(meta.lastAd.id).toBe("3");
+    expect(meta.nextAd.id).toBe("1");
+  });
+
+  it("onCycleComplete does not fire for random rotation", () => {
+    const onCycleComplete = vi.fn();
+    render(
+      <AdSlot
+        ads={ads}
+        rotate={{ interval: 1000, random: true }}
+        onCycleComplete={onCycleComplete}
+      />,
+    );
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+    expect(onCycleComplete).not.toHaveBeenCalled();
+  });
+
+  it("corner array advances on each full cycle, synced to the rotation timer", () => {
+    render(
+      <AdSlot
+        ads={ads}
+        rotate={{ interval: 1000 }}
+        position="corner"
+        corner={["bottom-right", "bottom-left"]}
+      />,
+    );
+    const slot = document.querySelector(".bba-ad-slot")!;
+    expect(slot.getAttribute("data-bba-corner")).toBe("bottom-right");
+    // Complete one full cycle (3 ticks for 3 ads).
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    expect(slot.getAttribute("data-bba-corner")).toBe("bottom-left");
+    // Complete a second full cycle — wraps back to the first corner.
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    expect(slot.getAttribute("data-bba-corner")).toBe("bottom-right");
+  });
+
+  it("single-string corner still works (back-compat)", () => {
+    render(<AdSlot ads={ads} position="corner" corner="top-left" />);
+    expect(document.querySelector(".bba-ad-slot")!.getAttribute("data-bba-corner")).toBe(
+      "top-left",
+    );
+  });
 });

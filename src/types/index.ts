@@ -3,6 +3,7 @@ export type {
   BannerConfig,
   BrandColors,
   CTA,
+  ImageInput,
   MediaSpec,
   OnClick,
   OnClose,

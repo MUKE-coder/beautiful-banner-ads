@@ -90,4 +90,71 @@ describe("BrandedBanner", () => {
     expect(screen.getByText("NEW")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Buy" })).toHaveAttribute("href", "/x");
   });
+
+  it("renders image from config.image (regression for #3)", () => {
+    render(
+      <BrandedBanner
+        id="b9"
+        config={{
+          title: "From config",
+          image: { src: "/envelope.png", alt: "Envelope" },
+          cta: { label: "Send", href: "/x" },
+        }}
+      />,
+    );
+    const img = screen.getByRole("img", { name: "Envelope" });
+    expect(img).toHaveAttribute("src", "/envelope.png");
+  });
+
+  it("config.image wins over config.media as the image source for BrandedBanner", () => {
+    render(
+      <BrandedBanner
+        id="b10"
+        config={{
+          title: "T",
+          image: { src: "/image.png", alt: "img-wins" },
+          media: { type: "image", src: "/media.png", alt: "media-loses" },
+        }}
+      />,
+    );
+    expect(screen.getByRole("img", { name: "img-wins" })).toHaveAttribute("src", "/image.png");
+  });
+
+  it("explicit `image` prop wins over config.image", () => {
+    render(
+      <BrandedBanner
+        id="b11"
+        image={{ src: "/explicit.png", alt: "explicit" }}
+        config={{ title: "T", image: { src: "/config.png", alt: "config" } }}
+      />,
+    );
+    expect(screen.getByRole("img", { name: "explicit" })).toHaveAttribute("src", "/explicit.png");
+  });
+
+  it("forwards image.width and image.height to the rendered <img> (CLS prevention)", () => {
+    render(
+      <BrandedBanner
+        id="b12"
+        title="T"
+        image={{ src: "/x.png", alt: "x", width: 320, height: 240 }}
+      />,
+    );
+    const img = screen.getByRole("img", { name: "x" });
+    expect(img.getAttribute("width")).toBe("320");
+    expect(img.getAttribute("height")).toBe("240");
+  });
+
+  it("forwards image.fit and image.position as object-fit / object-position styles", () => {
+    render(
+      <BrandedBanner
+        id="b13"
+        title="T"
+        image={{ src: "/x.png", alt: "x", fit: "cover", position: "top" }}
+      />,
+    );
+    const img = screen.getByRole("img", { name: "x" });
+    const style = img.getAttribute("style") ?? "";
+    expect(style).toMatch(/object-fit:\s*cover/);
+    expect(style).toMatch(/object-position:\s*top/);
+  });
 });

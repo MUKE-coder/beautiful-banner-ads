@@ -22,6 +22,26 @@ export interface BrandColors {
   text?: string;
 }
 
+/**
+ * Transparent product image used by `BrandedBanner`. Accept a URL string
+ * for the simplest case, or an object when you need alt text, intrinsic
+ * dimensions (for CLS prevention), or `object-fit`/`object-position` control.
+ */
+export type ImageInput =
+  | string
+  | {
+      src: string;
+      alt?: string;
+      /** Intrinsic width in pixels — reserves aspect-ratio space and prevents CLS. */
+      width?: number;
+      /** Intrinsic height in pixels — pair with `width` to reserve aspect-ratio space. */
+      height?: number;
+      /** Maps to CSS `object-fit`. Default `"contain"`. */
+      fit?: "contain" | "cover" | "scale-down" | "fill" | "none";
+      /** Maps to CSS `object-position`. Default `"center"`. */
+      position?: "center" | "top" | "bottom" | "left" | "right";
+    };
+
 /** Hero media for `MediaBanner` — image, video, GIF, or SVG. */
 export interface MediaSpec {
   type: "image" | "video" | "gif" | "svg";
@@ -97,6 +117,12 @@ export interface BannerConfig {
   finePrint?: string;
   cta?: CTA;
   media?: MediaSpec;
+  /**
+   * Transparent product image used by `BrandedBanner`. Distinct from
+   * `media` (which is the richer `MediaBanner` shape supporting video/gif/svg).
+   * When both are present, `image` wins for BrandedBanner rendering.
+   */
+  image?: ImageInput;
   position?: Position;
   size?: SizePreset;
   /** Any CSS width value: `"full"`, `"80%"`, `"600px"`, etc. */
