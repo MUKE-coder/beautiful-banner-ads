@@ -49,17 +49,17 @@ Goal: the visual foundation. Tokens + light/dark/system theming, working with an
 Goal: the composable shell every banner is built on, plus the cross-cutting behaviors.
 
 **Tasks**
-- [ ] Define shared **TypeScript types**: `AdMeta`, `CTA`, `Position`, `SizePreset`, `ThemeMode`, `MediaSpec`, `BannerConfig`, `StorageAdapter`, callback signatures (`onView`, `onClick`, `onClose`).
-- [ ] Build the **`Banner` (CustomBanner) primitive**: a beautiful, theme-aware shell container that accepts children/slots, handles theming, role/aria labeling ("Advertisement"), and forwards refs.
-- [ ] Build **slot components** under a shared namespace: `Banner.Media`, `Banner.Body` (title/subtitle/text), `Banner.CTA`, `Banner.Close`.
-- [ ] Implement **`useInView`** hook (IntersectionObserver, SSR-safe) → fires `onView` once per impression.
-- [ ] Implement **`useDismiss`** hook: close state + `onClose`, optional persistence via a developer-supplied `StorageAdapter` (package never touches storage itself).
-- [ ] Implement the **config-merge utility**: merge `config` object with explicit props (explicit props win, per `project-description.md` §9).
-- [ ] Implement **CTA rendering**: anchor when `href`, button when `onClick`, accessible either way; fires `onClick(adMeta, e)`.
-- [ ] Implement **a11y + keyboard**: focus styles, close button is a real labeled `<button>`, container labeling.
-- [ ] Unit tests: config-merge precedence, dismiss + storage adapter, inView fires once, CTA renders correct element.
+- [x] Define shared **TypeScript types**: `AdMeta`, `CTA`, `Position`, `SizePreset`, `ThemeMode`, `MediaSpec`, `BannerConfig`, `StorageAdapter`, callback signatures (`onView`, `onClick`, `onClose`).
+- [x] Build the **`Banner` (CustomBanner) primitive**: a beautiful, theme-aware shell container that accepts children/slots, handles theming, role/aria labeling ("Advertisement"), and forwards refs.
+- [x] Build **slot components** under a shared namespace: `Banner.Media`, `Banner.Body` (title/subtitle/text), `Banner.CTA`, `Banner.Close`.
+- [x] Implement **`useInView`** hook (IntersectionObserver, SSR-safe) → fires `onView` once per impression.
+- [x] Implement **`useDismiss`** hook: close state + `onClose`, optional persistence via a developer-supplied `StorageAdapter` (package never touches storage itself).
+- [x] Implement the **config-merge utility**: merge `config` object with explicit props (explicit props win, per `project-description.md` §9).
+- [x] Implement **CTA rendering**: anchor when `href`, button when `onClick`, accessible either way; fires `onClick(adMeta, e)`.
+- [x] Implement **a11y + keyboard**: focus styles, close button is a real labeled `<button>`, container labeling.
+- [x] Unit tests: config-merge precedence, dismiss + storage adapter, inView fires once, CTA renders correct element.
 
-**Exit criteria:** `<CustomBanner>` can be composed from slots into a good-looking ad with zero extra CSS; view/click/close callbacks fire correctly in tests; dismissal persistence works through a mock storage adapter.
+**Exit criteria:** `<CustomBanner>` can be composed from slots into a good-looking ad with zero extra CSS; view/click/close callbacks fire correctly in tests; dismissal persistence works through a mock storage adapter. ✅ (56 tests passing)
 
 ---
 

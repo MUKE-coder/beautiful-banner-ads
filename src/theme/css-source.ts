@@ -154,6 +154,164 @@ export const cssSource = String.raw`
   }
 }
 
+/* ── Banner component default styles ───────────────────────────────────────
+   All component selectors are wrapped in :where() so their specificity is 0.
+   Consumer Tailwind utilities / hand-written classes therefore always win
+   the cascade — combined with the head-prepended <style> tag, overrides are
+   predictable from any host stack.
+*/
+
+:where(.bba-banner) {
+  display: flex;
+  align-items: center;
+  gap: var(--bba-space-6);
+  padding: var(--bba-space-5) var(--bba-space-6);
+  background: var(--bba-surface);
+  color: var(--bba-text);
+  border-radius: var(--bba-radius-lg);
+  box-shadow: var(--bba-shadow-md);
+  border: 0;
+  font-family: var(--bba-font-body);
+  line-height: var(--bba-lh-normal);
+  position: relative;
+  max-width: 100%;
+}
+
+:where(.bba-banner__media) {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.bba-banner__body) {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bba-space-1);
+  min-width: 0;
+}
+
+:where(.bba-banner__eyebrow) {
+  display: inline-block;
+  font-size: var(--bba-fs-xs);
+  font-weight: var(--bba-fw-semibold);
+  letter-spacing: var(--bba-ls-wide);
+  color: var(--bba-text-muted);
+  text-transform: uppercase;
+  margin-bottom: var(--bba-space-1);
+}
+
+:where(.bba-banner__title) {
+  font-family: var(--bba-font-heading);
+  font-size: var(--bba-fs-xl);
+  font-weight: var(--bba-fw-bold);
+  line-height: var(--bba-lh-tight);
+  letter-spacing: var(--bba-ls-tight);
+  color: var(--bba-text);
+  margin: 0;
+}
+
+:where(.bba-banner__subtitle) {
+  font-size: var(--bba-fs-sm);
+  color: var(--bba-text-muted);
+  margin: 0;
+}
+
+:where(.bba-banner__fine-print) {
+  font-size: var(--bba-fs-xs);
+  color: var(--bba-text-muted);
+  margin: 0;
+}
+
+:where(.bba-banner__cta) {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bba-space-2);
+  padding: var(--bba-space-3) var(--bba-space-5);
+  background: var(--bba-cta-bg);
+  color: var(--bba-cta-text);
+  border-radius: var(--bba-radius-pill);
+  border: 0;
+  font-family: var(--bba-font-body);
+  font-size: var(--bba-fs-sm);
+  font-weight: var(--bba-fw-semibold);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--bba-shadow-cta);
+  transition:
+    transform var(--bba-dur-fast) var(--bba-ease-out),
+    background var(--bba-dur-fast) var(--bba-ease-out);
+  min-height: 40px;
+}
+
+:where(.bba-banner__cta:hover) {
+  background: var(--bba-cta-bg-hover);
+  transform: translateY(-1px);
+}
+
+:where(.bba-banner__cta:active) {
+  transform: translateY(0);
+}
+
+:where(.bba-banner__cta:focus-visible) {
+  outline: 2px solid var(--bba-focus-ring);
+  outline-offset: 2px;
+}
+
+:where(.bba-banner__cta--secondary) {
+  background: transparent;
+  color: var(--bba-text);
+  border: 1.5px solid var(--bba-border);
+  box-shadow: none;
+}
+
+:where(.bba-banner__cta--secondary:hover) {
+  background: var(--bba-surface);
+}
+
+:where(.bba-banner__close) {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  color: var(--bba-text);
+  border: 0;
+  border-radius: var(--bba-radius-pill);
+  cursor: pointer;
+  transition: background var(--bba-dur-fast) var(--bba-ease-out);
+}
+
+:where(.bba-banner__close:hover) {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+:where(.bba-banner__close:focus-visible) {
+  outline: 2px solid var(--bba-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Stack on small screens (mobile single-column). */
+@media (max-width: 640px) {
+  :where(.bba-banner) {
+    flex-wrap: wrap;
+    padding: var(--bba-space-4);
+  }
+  :where(.bba-banner__body) {
+    flex: 1 1 100%;
+  }
+  :where(.bba-banner__cta) {
+    flex: 1 1 100%;
+  }
+}
+
 /* — Reduced motion: zero out transitions/animations inside the scope — */
 @media (prefers-reduced-motion: reduce) {
   .bba-root *,
