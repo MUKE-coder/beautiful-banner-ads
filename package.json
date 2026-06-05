@@ -1,6 +1,6 @@
 {
   "name": "beautiful-banner-ads",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Beautiful, on-brand banner ads for React — drop-in, polished by default, fully yours. First-party self-promotion banners with light/dark/system themes, Tailwind-optional, SSR-safe, accessible.",
   "type": "module",
   "license": "MIT",
