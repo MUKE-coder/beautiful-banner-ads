@@ -86,14 +86,14 @@ Goal: "full layout control via props" — position, sizing (incl. named ad prese
 Goal: the Dribbble-style strip ad (Image 1), beautiful by default.
 
 **Tasks**
-- [ ] Build `<BannerAd>` on top of the `Banner` primitive: props `bg`, `title`, `subtitle`/`text`, `cta`, `position`, `width`, `size`, `dismissible`, `theme`, callbacks, and `config`.
-- [ ] Beautiful default layout: text block + CTA, balanced spacing, works at `full` and `80%` widths.
-- [ ] Support `bg` as solid color, gradient, or token; ensure text contrast (auto on-bg color from theme).
-- [ ] Sticky top/bottom variants polished (matches the "Get 20% off" bottom bar vibe).
-- [ ] Dismiss button styled and accessible.
-- [ ] Snapshot/visual test in light/dark/system; verify zero-prop default looks great.
+- [x] Build `<BannerAd>` on top of the `Banner` primitive: props `bg`, `title`, `subtitle`/`text`, `cta`, `position`, `width`, `size`, `dismissible`, `theme`, callbacks, and `config`.
+- [x] Beautiful default layout: text block + CTA, balanced spacing, works at `full` and `80%` widths.
+- [x] Support `bg` as solid color, gradient, or token; ensure text contrast (auto on-bg color from theme).
+- [x] Sticky top/bottom variants polished (matches the "Get 20% off" bottom bar vibe).
+- [x] Dismiss button styled and accessible.
+- [x] Snapshot/visual test in light/dark/system; verify zero-prop default looks great.
 
-**Exit criteria:** `<BannerAd title="..." cta={{label,href}} />` with no styling props looks like a polished promo strip in all three themes.
+**Exit criteria:** `<BannerAd title="..." cta={{label,href}} />` with no styling props looks like a polished promo strip in all three themes. ✅ (13 BannerAd tests)
 
 ---
 

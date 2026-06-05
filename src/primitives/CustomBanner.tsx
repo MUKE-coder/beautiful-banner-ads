@@ -70,6 +70,13 @@ export interface CustomBannerProps {
   style?: CSSProperties;
   /** Slot children (`CustomBanner.Body`, `.CTA`, …). */
   children?: ReactNode;
+  /**
+   * Tag set in `adMeta.type` for analytics callbacks. Wrapper components
+   * (`BannerAd`, `BrandedBanner`, …) override this so consumers can route
+   * impressions/clicks per ad type. Default `"CustomBanner"`.
+   * @internal
+   */
+  componentType?: string;
 }
 
 function CustomBannerInner(
@@ -98,6 +105,7 @@ function CustomBannerInner(
     className,
     style,
     children,
+    componentType = "CustomBanner",
   } = props;
 
   const merged = mergeConfigAndProps(config, {
@@ -123,8 +131,8 @@ function CustomBannerInner(
   useInjectStyles();
 
   const adMeta: AdMeta = useMemo(
-    () => ({ id, type: "CustomBanner", config }),
-    [id, config],
+    () => ({ id, type: componentType, config }),
+    [id, componentType, config],
   );
 
   const internalRef = useRef<HTMLDivElement>(null);

@@ -298,6 +298,31 @@ export const cssSource = String.raw`
   outline-offset: 2px;
 }
 
+/* ── BannerAd (strip) variants ──────────────────────────────────────── */
+
+:where(.bba-banner-ad--strong) {
+  background: var(--bba-brand-gradient);
+  color: var(--bba-on-brand);
+  border: 0;
+}
+
+:where(.bba-banner-ad--strong .bba-banner__title),
+:where(.bba-banner-ad--strong .bba-banner__subtitle),
+:where(.bba-banner-ad--strong .bba-banner__eyebrow),
+:where(.bba-banner-ad--strong .bba-banner__fine-print) {
+  color: var(--bba-on-brand);
+}
+
+:where(.bba-banner-ad--strong .bba-banner__subtitle),
+:where(.bba-banner-ad--strong .bba-banner__fine-print) {
+  opacity: 0.85;
+}
+
+:where(.bba-banner-ad--strong .bba-banner__eyebrow) {
+  color: var(--bba-accent-500);
+  opacity: 1;
+}
+
 /* ── Position rules ─────────────────────────────────────────────────── */
 
 :where(.bba-banner[data-bba-position="top"][data-bba-sticky="true"]) {

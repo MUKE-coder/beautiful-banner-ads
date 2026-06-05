@@ -33,6 +33,9 @@ export {
   type CustomBannerProps,
 } from "./primitives";
 
+// Components
+export { BannerAd, type BannerAdProps } from "./components";
+
 // Utils
 export { cn, composeRefs, mergeConfigAndProps, type ClassValue } from "./utils";
 
