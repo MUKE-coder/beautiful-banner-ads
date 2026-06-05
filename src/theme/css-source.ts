@@ -323,6 +323,116 @@ export const cssSource = String.raw`
   opacity: 1;
 }
 
+/* ── BrandedBanner (premium) ──────────────────────────────────────────── */
+
+:where(.bba-banner-branded) {
+  background: var(--bba-brand-gradient);
+  color: var(--bba-on-brand);
+  border-radius: var(--bba-radius-lg);
+  border: 0;
+  overflow: hidden;
+}
+
+:where(.bba-banner-branded .bba-banner__title),
+:where(.bba-banner-branded .bba-banner__subtitle),
+:where(.bba-banner-branded .bba-banner__eyebrow),
+:where(.bba-banner-branded .bba-banner__fine-print) {
+  color: var(--bba-on-brand);
+}
+
+:where(.bba-banner-branded .bba-banner__title) {
+  font-size: var(--bba-fs-2xl);
+}
+
+:where(.bba-banner-branded[data-bba-size="banner"] .bba-banner__title) {
+  font-size: var(--bba-fs-sm);
+}
+
+:where(.bba-banner-branded[data-bba-size="halfpage"] .bba-banner__title) {
+  font-size: var(--bba-fs-2xl);
+}
+
+:where(.bba-banner-branded[data-bba-size="social"] .bba-banner__title) {
+  font-size: var(--bba-fs-3xl);
+}
+
+:where(.bba-banner-branded .bba-banner__subtitle),
+:where(.bba-banner-branded .bba-banner__fine-print) {
+  opacity: 0.85;
+}
+
+:where(.bba-banner-branded .bba-banner__eyebrow) {
+  color: var(--bba-accent-500);
+  opacity: 1;
+}
+
+:where(.bba-banner-branded__image) {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ── MediaBanner ──────────────────────────────────────────────────────── */
+
+:where(.bba-banner-media .bba-banner__media) {
+  width: 100%;
+  max-width: 320px;
+  border-radius: var(--bba-radius-md);
+  overflow: hidden;
+}
+
+:where(.bba-banner-media__img),
+:where(.bba-banner-media__video),
+:where(.bba-banner-media__video-poster) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--bba-radius-md);
+}
+
+:where(.bba-banner-media__svg) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.bba-banner-media__svg svg) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ── AdSlot wrapper ───────────────────────────────────────────────────── */
+
+:where(.bba-ad-slot) {
+  display: contents;
+}
+
+:where(.bba-ad-slot[data-bba-position]) {
+  display: block;
+}
+
+:where(.bba-ad-slot[data-bba-position="corner"]) {
+  position: fixed;
+  z-index: var(--bba-z-corner);
+}
+
+:where(.bba-ad-slot[data-bba-position="top"][data-bba-sticky="true"]) {
+  position: sticky;
+  top: 0;
+  z-index: var(--bba-z-sticky);
+}
+
+:where(.bba-ad-slot[data-bba-position="bottom"][data-bba-sticky="true"]) {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--bba-z-sticky);
+}
+
 /* ── Position rules ─────────────────────────────────────────────────── */
 
 :where(.bba-banner[data-bba-position="top"][data-bba-sticky="true"]) {

@@ -34,7 +34,18 @@ export {
 } from "./primitives";
 
 // Components
-export { BannerAd, type BannerAdProps } from "./components";
+export {
+  AdSlot,
+  BannerAd,
+  BannerRotator,
+  BrandedBanner,
+  MediaBanner,
+  type AdSlotProps,
+  type BannerAdProps,
+  type BrandedBannerProps,
+  type MediaBannerProps,
+  type RotateOptions,
+} from "./components";
 
 // Utils
 export { cn, composeRefs, mergeConfigAndProps, type ClassValue } from "./utils";
