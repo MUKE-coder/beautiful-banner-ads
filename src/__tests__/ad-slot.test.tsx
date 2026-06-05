@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AdSlot } from "../components/AdSlot";
 import { BannerAd } from "../components/BannerAd";
+import { BrandedBanner } from "../components/BrandedBanner";
 import type { BannerConfig } from "../types/ad";
 
 const ads = [
@@ -269,5 +270,77 @@ describe("AdSlot", () => {
     expect(document.querySelector(".bba-ad-slot")!.getAttribute("data-bba-corner")).toBe(
       "top-left",
     );
+  });
+
+  it("storage cascades into BrandedBanner rendered via children-as-function (no re-stating)", () => {
+    const store = new Map<string, string>();
+    const storage = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => {
+        store.set(k, v);
+      },
+      removeItem: (k: string) => {
+        store.delete(k);
+      },
+    };
+    render(
+      <AdSlot ads={ads} dismissible storage={storage}>
+        {(config) => <BrandedBanner config={config} />}
+      </AdSlot>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss ad" }));
+    expect(store.get("bba-dismissed:1")).toBe("1");
+  });
+
+  it("storageKey prefix flows into the resolved key for children-as-function banners", () => {
+    const store = new Map<string, string>();
+    const storage = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => {
+        store.set(k, v);
+      },
+      removeItem: (k: string) => {
+        store.delete(k);
+      },
+    };
+    render(
+      <AdSlot ads={ads} dismissible storage={storage} storageKey="footer-slot">
+        {(config) => <BrandedBanner config={config} />}
+      </AdSlot>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss ad" }));
+    expect(store.get("footer-slot:bba-dismissed:1")).toBe("1");
+    expect(store.get("bba-dismissed:1")).toBeUndefined();
+  });
+
+  it("explicit storage on the inner banner wins over the slot context", () => {
+    const slotStore = new Map<string, string>();
+    const slotStorage = {
+      getItem: (k: string) => slotStore.get(k) ?? null,
+      setItem: (k: string, v: string) => {
+        slotStore.set(k, v);
+      },
+      removeItem: (k: string) => {
+        slotStore.delete(k);
+      },
+    };
+    const localStore = new Map<string, string>();
+    const localStorage = {
+      getItem: (k: string) => localStore.get(k) ?? null,
+      setItem: (k: string, v: string) => {
+        localStore.set(k, v);
+      },
+      removeItem: (k: string) => {
+        localStore.delete(k);
+      },
+    };
+    render(
+      <AdSlot ads={ads} dismissible storage={slotStorage}>
+        {(config) => <BrandedBanner config={config} storage={localStorage} />}
+      </AdSlot>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss ad" }));
+    expect(localStore.get("bba-dismissed:1")).toBe("1");
+    expect(slotStore.size).toBe(0);
   });
 });

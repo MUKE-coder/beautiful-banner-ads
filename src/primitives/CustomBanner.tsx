@@ -27,6 +27,7 @@ import { composeRefs } from "../utils/compose-refs";
 import { computeLayout, type Corner } from "../utils/layout";
 import { mergeConfigAndProps } from "../utils/merge-config";
 import { BannerContext, useBannerContext } from "./banner-context";
+import { useSlotContext } from "./slot-context";
 
 export interface CustomBannerProps {
   /** Stable id used in callbacks and as the default dismiss-storage key. */
@@ -121,6 +122,13 @@ function CustomBannerInner(
     size: sizeProp,
   });
 
+  // Fall back to the enclosing <AdSlot>'s storage adapter when this banner
+  // is rendered as a children-as-function child and didn't get its own
+  // `storage`/`storageKey` props threaded through.
+  const slotCtx = useSlotContext();
+  const effectiveStorage = storage ?? slotCtx?.storage;
+  const effectiveStorageKey = storageKey ?? slotCtx?.storageKey;
+
   const fallbackId = useId();
   const id = merged.id ?? fallbackId;
   const ariaLabel = merged.ariaLabel ?? "Advertisement";
@@ -147,8 +155,8 @@ function CustomBannerInner(
 
   const { dismissed, dismiss } = useDismiss({
     adMeta,
-    storage,
-    storageKey,
+    storage: effectiveStorage,
+    storageKey: effectiveStorageKey,
     onClose,
     enabled: dismissible,
   });

@@ -29,8 +29,11 @@ export {
   BannerSubtitle,
   BannerTitle,
   CustomBanner,
+  SlotContext,
+  useSlotContext,
   type BannerCTAProps,
   type CustomBannerProps,
+  type SlotContextValue,
 } from "./primitives";
 
 // Components

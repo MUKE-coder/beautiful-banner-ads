@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useInjectStyles } from "../hooks/useInjectStyles";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { SlotContext, type SlotContextValue } from "../primitives/slot-context";
 import type {
   AdMeta,
   BannerConfig,
@@ -277,7 +278,7 @@ export function AdSlot(props: AdSlotProps) {
         ? `${storageKey}:bba-dismissed:${adIdentity}`
         : undefined;
 
-      content =
+      const inner =
         typeof children === "function" ? (
           children(mergedConfig, safeIndex)
         ) : (
@@ -287,6 +288,19 @@ export function AdSlot(props: AdSlotProps) {
             storageKey={resolvedStorageKey}
           />
         );
+
+      // Provide storage + resolved per-ad storageKey to any descendant
+      // `CustomBanner` so children-as-function renderers don't have to
+      // re-thread these props on the inner banner. Per-banner props win.
+      if (storage || resolvedStorageKey) {
+        const slotValue: SlotContextValue = {
+          storage,
+          storageKey: resolvedStorageKey,
+        };
+        content = <SlotContext.Provider value={slotValue}>{inner}</SlotContext.Provider>;
+      } else {
+        content = inner;
+      }
     }
   } else if (children && typeof children !== "function") {
     const onlyChild = Children.only(children);
