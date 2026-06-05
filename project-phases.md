@@ -11,18 +11,18 @@
 Goal: an empty-but-correct, publishable, typed React library skeleton that builds.
 
 **Tasks**
-- [ ] Initialize repo: `package.json`, `.gitignore`, `LICENSE` (MIT), `README.md` stub.
-- [ ] Set package name to `beautiful-banner-ads`; set `version` `0.1.0`; mark `private: false` only at publish time.
-- [ ] Add TypeScript with a strict `tsconfig.json` (strict, `jsx: react-jsx`, `declaration`, `isolatedModules`).
-- [ ] Add React 18/19 as `peerDependencies` (and devDeps for local dev). Do NOT bundle React.
-- [ ] Set up the bundler (recommend `tsup`) to output **ESM + CJS + `.d.ts`**.
-- [ ] Configure `package.json` `exports` map with entries for `.`, `./styles.css`, and `./tailwind-preset`. Set `main`, `module`, `types`, `files` whitelist, and `sideEffects` (CSS files listed as side-effectful, JS side-effect-free).
-- [ ] Add ESLint + Prettier configs and `lint`/`format` scripts.
-- [ ] Add test runner (recommend Vitest + @testing-library/react + jsdom) with a sample passing test.
-- [ ] Add scripts: `build`, `dev` (watch), `test`, `lint`, `typecheck`, `clean`.
-- [ ] Create folder structure: `src/`, `src/components/`, `src/primitives/`, `src/hooks/`, `src/theme/`, `src/utils/`, `src/types/`, `examples/`.
+- [x] Initialize repo: `package.json`, `.gitignore`, `LICENSE` (MIT), `README.md` stub.
+- [x] Set package name to `beautiful-banner-ads`; set `version` `0.1.0`; mark `private: false` only at publish time.
+- [x] Add TypeScript with a strict `tsconfig.json` (strict, `jsx: react-jsx`, `declaration`, `isolatedModules`).
+- [x] Add React 18/19 as `peerDependencies` (and devDeps for local dev). Do NOT bundle React.
+- [x] Set up the bundler (recommend `tsup`) to output **ESM + CJS + `.d.ts`**.
+- [x] Configure `package.json` `exports` map with entries for `.`, `./styles.css`, and `./tailwind-preset`. Set `main`, `module`, `types`, `files` whitelist, and `sideEffects` (CSS files listed as side-effectful, JS side-effect-free).
+- [x] Add ESLint + Prettier configs and `lint`/`format` scripts.
+- [x] Add test runner (recommend Vitest + @testing-library/react + jsdom) with a sample passing test.
+- [x] Add scripts: `build`, `dev` (watch), `test`, `lint`, `typecheck`, `clean`.
+- [x] Create folder structure: `src/`, `src/components/`, `src/primitives/`, `src/hooks/`, `src/theme/`, `src/utils/`, `src/types/`, `examples/`.
 
-**Exit criteria:** `npm run build` produces ESM+CJS+types with no errors; `npm test` passes the sample test; `npm run typecheck` is clean.
+**Exit criteria:** `npm run build` produces ESM+CJS+types with no errors; `npm test` passes the sample test; `npm run typecheck` is clean. ✅
 
 ---
 
