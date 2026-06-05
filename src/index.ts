@@ -48,7 +48,15 @@ export {
 } from "./components";
 
 // Utils
-export { cn, composeRefs, mergeConfigAndProps, type ClassValue } from "./utils";
+export {
+  cn,
+  composeRefs,
+  createExpiringStorage,
+  createForeverStorage,
+  createSessionStorage,
+  mergeConfigAndProps,
+  type ClassValue,
+} from "./utils";
 
 // Types
 export type {

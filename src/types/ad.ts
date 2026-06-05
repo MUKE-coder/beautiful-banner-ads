@@ -57,12 +57,15 @@ export interface CTA {
 /**
  * Synchronous storage adapter for dismissal persistence. The package never
  * touches storage itself — pass this in if you want dismissals remembered.
- * `window.localStorage` satisfies this shape directly.
+ *
+ * The shape matches the Web Storage API (`getItem`/`setItem`/`removeItem`),
+ * so `window.localStorage`, `window.sessionStorage`, or any object that
+ * implements those three methods can be passed directly.
  */
 export interface StorageAdapter {
-  get(key: string): string | null;
-  set(key: string, value: string): void;
-  remove?(key: string): void;
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem?(key: string): void;
 }
 
 /**

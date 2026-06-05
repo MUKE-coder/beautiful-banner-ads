@@ -40,7 +40,7 @@ export function useDismiss({
   useEffect(() => {
     if (!enabled || !storage) return;
     try {
-      if (storage.get(key) === DISMISSED_VALUE) {
+      if (storage.getItem(key) === DISMISSED_VALUE) {
         setDismissed(true);
       }
     } catch {
@@ -53,7 +53,7 @@ export function useDismiss({
     setDismissed(true);
     if (storage) {
       try {
-        storage.set(key, DISMISSED_VALUE);
+        storage.setItem(key, DISMISSED_VALUE);
       } catch {
         /* ignore storage errors */
       }

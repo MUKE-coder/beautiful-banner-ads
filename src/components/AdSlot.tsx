@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useInjectStyles } from "../hooks/useInjectStyles";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
-import type { BannerConfig, Position } from "../types/ad";
+import type { BannerConfig, Position, StorageAdapter } from "../types/ad";
 import { cn } from "../utils/cn";
 import { computeLayout, type Corner } from "../utils/layout";
 import { BannerAd } from "./BannerAd";
@@ -38,11 +38,35 @@ export interface AdSlotProps {
   corner?: Corner;
   offset?: number;
   width?: string;
+  /**
+   * Storage adapter applied to every child ad's dismissal. Per-ad `config`
+   * cannot carry a function, so this is the standard way to share one
+   * adapter (e.g. `createExpiringStorage({ days: 7 })`) across a rotating
+   * slot of self-promo banners. Only auto-applied to the default
+   * `<BannerAd config={…} />` renderer — for `children-as-function`, pass
+   * `storage` to your own component.
+   */
+  storage?: StorageAdapter;
+  /**
+   * Optional namespace prefix. When set, each child ad's dismiss key
+   * becomes `${storageKey}:bba-dismissed:${ad.id}` — useful when one app
+   * has multiple slots writing to the same `localStorage`. Per-ad
+   * `config.storageKey` (if you ever add one) is not currently overridden
+   * here since `storageKey` isn't part of `BannerConfig`.
+   */
+  storageKey?: string;
+  /**
+   * Slot-level default for `dismissible`. Each ad's `config.dismissible`
+   * still wins per-ad — so you can set `dismissible` once on the slot and
+   * mark a specific ad `dismissible: false` to make it permanent.
+   */
+  dismissible?: boolean;
   className?: string;
   style?: CSSProperties;
   /**
    * Either:
    *  - A render function `(config, index) => ReactNode` used when `ads` is given.
+   *    Receives a config already merged with the slot's `dismissible` default.
    *  - A single banner element (`<BannerAd …/>`) when neither `ad` nor `ads` is set.
    */
   children?: ReactNode | ((config: BannerConfig, index: number) => ReactNode);
@@ -59,6 +83,9 @@ export function AdSlot(props: AdSlotProps) {
     corner,
     offset,
     width,
+    storage,
+    storageKey,
+    dismissible,
     className,
     style,
     children,
@@ -98,13 +125,30 @@ export function AdSlot(props: AdSlotProps) {
     const safeIndex = Math.min(index, list.length - 1);
     const activeConfig = list[safeIndex];
     if (activeConfig) {
+      // Cascade slot-level dismissible into config (per-ad config wins).
+      const mergedConfig: BannerConfig =
+        dismissible !== undefined && activeConfig.dismissible === undefined
+          ? { ...activeConfig, dismissible }
+          : activeConfig;
+
+      // Build a per-ad storage key when the slot supplied a prefix.
+      const adIdentity = activeConfig.id ?? `idx-${safeIndex}`;
+      const resolvedStorageKey = storageKey
+        ? `${storageKey}:bba-dismissed:${adIdentity}`
+        : undefined;
+
       content =
-        typeof children === "function"
-          ? children(activeConfig, safeIndex)
-          : <BannerAd config={activeConfig} />;
+        typeof children === "function" ? (
+          children(mergedConfig, safeIndex)
+        ) : (
+          <BannerAd
+            config={mergedConfig}
+            storage={storage}
+            storageKey={resolvedStorageKey}
+          />
+        );
     }
   } else if (children && typeof children !== "function") {
-    // Single-child placement wrapper — pass position to the child if possible.
     const onlyChild = Children.only(children);
     if (isValidElement(onlyChild)) {
       content = onlyChild;

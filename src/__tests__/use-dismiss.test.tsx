@@ -9,11 +9,11 @@ function makeStorage(): StorageAdapter & { store: Map<string, string> } {
   const store = new Map<string, string>();
   return {
     store,
-    get: (k: string) => store.get(k) ?? null,
-    set: (k: string, v: string) => {
+    getItem: (k: string) => store.get(k) ?? null,
+    setItem: (k: string, v: string) => {
       store.set(k, v);
     },
-    remove: (k: string) => {
+    removeItem: (k: string) => {
       store.delete(k);
     },
   };
@@ -42,7 +42,7 @@ describe("useDismiss", () => {
 
   it("rehydrates dismissed=true from storage on mount", () => {
     const storage = makeStorage();
-    storage.set("bba-dismissed:ad1", "1");
+    storage.setItem("bba-dismissed:ad1", "1");
     const { result } = renderHook(() => useDismiss({ adMeta, storage }));
     expect(result.current.dismissed).toBe(true);
   });
@@ -56,6 +56,13 @@ describe("useDismiss", () => {
     expect(storage.store.get("my-custom-key")).toBe("1");
   });
 
+  it("accepts window.localStorage directly (Web Storage shape)", () => {
+    const { result } = renderHook(() => useDismiss({ adMeta, storage: window.localStorage }));
+    act(() => result.current.dismiss());
+    expect(window.localStorage.getItem("bba-dismissed:ad1")).toBe("1");
+    window.localStorage.removeItem("bba-dismissed:ad1");
+  });
+
   it("does nothing when disabled", () => {
     const onClose = vi.fn();
     const { result } = renderHook(() =>
@@ -66,12 +73,12 @@ describe("useDismiss", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it("swallows storage.get/set errors without crashing", () => {
+  it("swallows storage getItem/setItem errors without crashing", () => {
     const storage: StorageAdapter = {
-      get: () => {
+      getItem: () => {
         throw new Error("blocked");
       },
-      set: () => {
+      setItem: () => {
         throw new Error("quota");
       },
     };

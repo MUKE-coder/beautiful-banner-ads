@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AdSlot } from "../components/AdSlot";
 import { BannerAd } from "../components/BannerAd";
@@ -87,5 +87,65 @@ describe("AdSlot", () => {
       vi.advanceTimersByTime(5000);
     });
     expect(screen.getByText("Ad One")).toBeInTheDocument();
+  });
+
+  it("dismissible cascades to the default BannerAd renderer", () => {
+    render(<AdSlot ads={ads} dismissible />);
+    expect(screen.getByRole("button", { name: "Dismiss ad" })).toBeInTheDocument();
+  });
+
+  it("per-ad config.dismissible wins over slot.dismissible (false override)", () => {
+    const overridden = [{ ...ads[0]!, dismissible: false }, ads[1]!, ads[2]!];
+    render(<AdSlot ads={overridden} dismissible />);
+    expect(screen.queryByRole("button", { name: "Dismiss ad" })).toBeNull();
+  });
+
+  it("storage prop cascades to the default BannerAd renderer", () => {
+    const store = new Map<string, string>();
+    const storage = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => {
+        store.set(k, v);
+      },
+      removeItem: (k: string) => {
+        store.delete(k);
+      },
+    };
+    render(<AdSlot ads={ads} dismissible storage={storage} />);
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss ad" }));
+    expect(store.get("bba-dismissed:1")).toBe("1");
+  });
+
+  it("storageKey acts as a per-slot namespace prefix on the resolved key", () => {
+    const store = new Map<string, string>();
+    const storage = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => {
+        store.set(k, v);
+      },
+      removeItem: (k: string) => {
+        store.delete(k);
+      },
+    };
+    render(
+      <AdSlot ads={ads} dismissible storage={storage} storageKey="footer-slot" />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss ad" }));
+    expect(store.get("footer-slot:bba-dismissed:1")).toBe("1");
+    expect(store.get("bba-dismissed:1")).toBeUndefined();
+  });
+
+  it("children-as-function still receives the slot-merged dismissible default", () => {
+    let seen: { id?: string; dismissible?: boolean } = {};
+    render(
+      <AdSlot ads={ads} dismissible>
+        {(config) => {
+          seen = config;
+          return <div data-testid="rendered">{config.title}</div>;
+        }}
+      </AdSlot>,
+    );
+    expect(seen.dismissible).toBe(true);
+    expect(seen.id).toBe("1");
   });
 });
