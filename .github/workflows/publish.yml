@@ -31,8 +31,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
+
+      # Trusted publishing requires npm CLI >= 11.5.1. Node 24 LTS ships
+      # with a recent npm, but we upgrade explicitly so future Node bumps
+      # don't silently regress this.
+      - name: Upgrade npm to latest
+        run: |
+          npm install -g npm@latest
+          node --version
+          npm --version
 
       - name: Install dependencies
         run: npm ci
