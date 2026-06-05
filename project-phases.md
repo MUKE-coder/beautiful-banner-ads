@@ -31,16 +31,16 @@ Goal: an empty-but-correct, publishable, typed React library skeleton that build
 Goal: the visual foundation. Tokens + light/dark/system theming, working with and without Tailwind.
 
 **Tasks**
-- [ ] Implement the full design-token set from `design-style-guide.md` as **CSS custom properties** (color, typography, spacing, radii, shadow, motion, z-index).
-- [ ] Create a scoped base stylesheet (`src/theme/styles.css` → built to `beautiful-banner-ads/styles.css`) using a root scope class (e.g. `.bba-root`) so styles never leak.
-- [ ] Implement light theme + dark theme token sets and a `system` mode that reads `prefers-color-scheme` and updates live (with an SSR-safe guard).
-- [ ] Build a `ThemeProvider` (optional) and a `useTheme`/`useResolvedTheme` hook; also allow per-component `theme` prop without a provider.
-- [ ] Implement a **style auto-injection** mechanism so a no-Tailwind consumer gets styles without manual CSS import (but ALSO export `styles.css` for those who prefer explicit import / SSR). Inject once, idempotent, SSR-safe.
-- [ ] Create the **Tailwind preset** (`src/theme/tailwind-preset.ts` → `beautiful-banner-ads/tailwind-preset`) exporting the same tokens as Tailwind theme extensions.
-- [ ] Implement a className-merge utility that lets consumer classes override package defaults predictably (low specificity defaults).
-- [ ] Implement `prefers-reduced-motion` token/flag wiring.
+- [x] Implement the full design-token set from `design-style-guide.md` as **CSS custom properties** (color, typography, spacing, radii, shadow, motion, z-index).
+- [x] Create a scoped base stylesheet (`src/theme/css-source.ts` → built to `beautiful-banner-ads/styles.css`) using a root scope class (e.g. `.bba-root`) so styles never leak.
+- [x] Implement light theme + dark theme token sets and a `system` mode that reads `prefers-color-scheme` and updates live (with an SSR-safe guard).
+- [x] Build a `ThemeProvider` (optional) and a `useTheme`/`useResolvedTheme` hook; also allow per-component `theme` prop without a provider.
+- [x] Implement a **style auto-injection** mechanism so a no-Tailwind consumer gets styles without manual CSS import (but ALSO export `styles.css` for those who prefer explicit import / SSR). Inject once, idempotent, SSR-safe.
+- [x] Create the **Tailwind preset** (`src/theme/tailwind-preset.ts` → `beautiful-banner-ads/tailwind-preset`) exporting the same tokens as Tailwind theme extensions.
+- [x] Implement a className-merge utility that lets consumer classes override package defaults predictably (low specificity defaults).
+- [x] Implement `prefers-reduced-motion` token/flag wiring.
 
-**Exit criteria:** A throwaway component using the tokens renders identically in a no-Tailwind app and a Tailwind app; toggling light/dark/system visibly changes the theme; styles are scoped (no leakage proven by a test page with conflicting global CSS).
+**Exit criteria:** A throwaway component using the tokens renders identically in a no-Tailwind app and a Tailwind app; toggling light/dark/system visibly changes the theme; styles are scoped (no leakage proven by a test page with conflicting global CSS). ✅ (unit-verified — visual cross-check happens in the Phase 9 playground)
 
 ---
 
